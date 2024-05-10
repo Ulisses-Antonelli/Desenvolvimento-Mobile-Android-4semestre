@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.recycleview_aula_03.MinhaClasseAdapter
 import com.example.recycleview_aula_03.R
+import com.example.recycleview_aula_03.model.Card
+import com.example.recycleview_aula_03.model.FlashcardDeck
 import java.util.*
 
 class MainPrincipal : AppCompatActivity(),  MinhaClasseAdapter.ItemClickListener {
@@ -15,8 +17,7 @@ class MainPrincipal : AppCompatActivity(),  MinhaClasseAdapter.ItemClickListener
 
     private lateinit var viewPager: ViewPager2
     private lateinit var adapter: MinhaClasseAdapter
-    private var dataList = mutableListOf<String>()
-    //desfez a variavel backgroundColors
+    private var flashcardDecks = mutableListOf<FlashcardDeck>()
     private var backgroundColors = mutableListOf<Int>()
 
 
@@ -25,26 +26,28 @@ class MainPrincipal : AppCompatActivity(),  MinhaClasseAdapter.ItemClickListener
         setContentView(R.layout.activity_main)
 
         viewPager = findViewById(R.id.viewPager)
-        adapter = MinhaClasseAdapter(dataList,  backgroundColors, this)
+        adapter = MinhaClasseAdapter(flashcardDecks,  backgroundColors, this)
         viewPager.adapter = adapter
 
 
         val btnAddItem : Button = findViewById<Button>(R.id.btnAddItem)
         btnAddItem.setOnClickListener {
-            addItemToList()
+            addFlashcardDeck()
         }
     }
 
+    private fun addFlashcardDeck() {
+        val novoDeck = FlashcardDeck("Titulo ${flashcardDecks.size + 1}", mutableListOf() )
+        novoDeck.cartoes.add(Card("Insira a Frente do card", "Insira o Verso do Card"))
 
-    private fun addItemToList() {
-        dataList.add("Item ${dataList.size + 1}")
         backgroundColors.add(getRandomColor())
+        flashcardDecks.add(novoDeck)
         adapter.notifyDataSetChanged()
-        viewPager.setCurrentItem(dataList.size - 1, true)
+        viewPager.setCurrentItem(flashcardDecks.size - 1, true)
     }
 
     override fun onDeleteItemClick(position: Int) {
-        dataList.removeAt(position)
+        flashcardDecks.removeAt(position)
         backgroundColors.removeAt(position)
         adapter.notifyDataSetChanged()
     }
